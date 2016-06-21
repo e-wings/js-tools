@@ -12,6 +12,8 @@ class Image_play_sprite{
      * @param {number=25}		fps  帧频
      * @param {number}			total 逐帧总数
      * @param {number}			columns sprite图的列数
+     * @param {number}			w 单张图的宽度
+     * @param {number}			h 单张图的高度
 	 * @param {boolean}			loop 循环
 	 * @param {boolean}			reverse 方向
 	 */
@@ -30,7 +32,7 @@ class Image_play_sprite{
         this._canvas.style.backgroundImage="url('"+img+"')";
         this._canvas.style.backgroundRepeat="no-repeat";
         this._canvas.style.display="block";
-		this._index=0;
+		this._index=(reverse)?total-1:0;
 		this.startTimer(fps,total,columns,w,h,loop,reverse);
 	}
 
@@ -44,13 +46,19 @@ class Image_play_sprite{
 		){
 		var timer=setInterval(()=>{
 			var positionX,positionY="0";
-			if(this._index<total){
+			var step=(reverse)?-1:1;
+			if(this._index<total && this._index>=0){
 				positionX=(this._index%columns)*w*-1+"px";
 				positionY=Math.floor(this._index/columns)*h*-1+"px";
 				this._canvas.style.backgroundPosition=positionX+" "+positionY;
-				this._index++;
+				// console.log(this._index,columns,w,step,positionX,positionY);
+				this._index+=step;
 			} else {
-				clearInterval(timer);
+				if(loop){
+					this._index=(reverse)?total-1:0;
+				} else {
+					clearInterval(timer);
+				}
 			}
 		},Math.round(1000/fps));
 	}

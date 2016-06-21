@@ -9,6 +9,8 @@ var Image_play_sprite = (function () {
      * @param {number=25}		fps  帧频
      * @param {number}			total 逐帧总数
      * @param {number}			columns sprite图的列数
+     * @param {number}			w 单张图的宽度
+     * @param {number}			h 单张图的高度
      * @param {boolean}			loop 循环
      * @param {boolean}			reverse 方向
      */
@@ -21,7 +23,7 @@ var Image_play_sprite = (function () {
         this._canvas.style.backgroundImage = "url('" + img + "')";
         this._canvas.style.backgroundRepeat = "no-repeat";
         this._canvas.style.display = "block";
-        this._index = 0;
+        this._index = (reverse) ? total - 1 : 0;
         this.startTimer(fps, total, columns, w, h, loop, reverse);
     }
     Image_play_sprite.prototype.startTimer = function (fps, total, columns, w, h, loop, reverse) {
@@ -32,14 +34,21 @@ var Image_play_sprite = (function () {
         if (reverse === void 0) { reverse = false; }
         var timer = setInterval(function () {
             var positionX, positionY = "0";
-            if (_this._index < total) {
+            var step = (reverse) ? -1 : 1;
+            if (_this._index < total && _this._index >= 0) {
                 positionX = (_this._index % columns) * w * -1 + "px";
                 positionY = Math.floor(_this._index / columns) * h * -1 + "px";
                 _this._canvas.style.backgroundPosition = positionX + " " + positionY;
-                _this._index++;
+                // console.log(this._index,columns,w,step,positionX,positionY);
+                _this._index += step;
             }
             else {
-                clearInterval(timer);
+                if (loop) {
+                    _this._index = (reverse) ? total - 1 : 0;
+                }
+                else {
+                    clearInterval(timer);
+                }
             }
         }, Math.round(1000 / fps));
     };
