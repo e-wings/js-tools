@@ -6,6 +6,13 @@ class Image_play_sprite{
 	private _canvas:any;
 	private _index:number;
 	private _timer:number;
+	private _fps:number;
+	private _total:number;
+	private _columns:number=1; 
+    private _w:number;
+    private _h:number;
+	private _loop: boolean = false; 
+    private _reverse: boolean = false;
 
 	/**
 	 * @param {string}			img 图片
@@ -27,41 +34,45 @@ class Image_play_sprite{
                 h:number, 
 		        loop: boolean = false, 
                 reverse: boolean = false
-        ) {
+        ){
+		this._fps = fps;
+        this._total = total;
+        this._columns = columns;
+        this._w = w;
+        this._h = h;
+		this._loop = loop;
+        this._reverse = reverse;
 
         this._canvas = document.getElementById(canvasID);
         this._canvas.style.backgroundImage="url('"+img+"')";
         this._canvas.style.backgroundRepeat="no-repeat";
         this._canvas.style.display="block";
 		this._index=(reverse)?total-1:0;
-		this.startTimer(fps,total,columns,w,h,loop,reverse);
+		this.play();
 	}
 
-	startTimer(fps: number = 25, 
-                total: number, 
-                columns:number=1, 
-                w:number,
-                h:number, 
-		        loop: boolean = false, 
-                reverse: boolean = false
-		){
+	play(){
+		if(this._timer){
+			this.pause();
+		}
+		this._canvas.style.display="block";
 		this._timer=setInterval(()=>{
 			var positionX,positionY="0";
-			var step=(reverse)?-1:1;
-			if(this._index<total && this._index>=0){
-				positionX=(this._index%columns)*w*-1+"px";
-				positionY=Math.floor(this._index/columns)*h*-1+"px";
+			var step=(this._reverse)?-1:1;
+			if(this._index<this._total && this._index>=0){
+				positionX=(this._index%this._columns)*this._w*-1+"px";
+				positionY=Math.floor(this._index/this._columns)*this._h*-1+"px";
 				this._canvas.style.backgroundPosition=positionX+" "+positionY;
 				// console.log(this._index,columns,w,step,positionX,positionY);
 				this._index+=step;
 			} else {
-				if(loop){
-					this._index=(reverse)?total-1:0;
+				if(this._loop){
+					this._index=(this._reverse)?this._total-1:0;
 				} else {
 					clearInterval(this._timer);
 				}
 			}
-		},Math.round(1000/fps));
+		},Math.round(1000/this._fps));
 	}
 
 	stop(){

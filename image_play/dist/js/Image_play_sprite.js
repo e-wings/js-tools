@@ -19,38 +19,48 @@ var Image_play_sprite = (function () {
         if (columns === void 0) { columns = 1; }
         if (loop === void 0) { loop = false; }
         if (reverse === void 0) { reverse = false; }
+        this._columns = 1;
+        this._loop = false;
+        this._reverse = false;
+        this._fps = fps;
+        this._total = total;
+        this._columns = columns;
+        this._w = w;
+        this._h = h;
+        this._loop = loop;
+        this._reverse = reverse;
         this._canvas = document.getElementById(canvasID);
         this._canvas.style.backgroundImage = "url('" + img + "')";
         this._canvas.style.backgroundRepeat = "no-repeat";
         this._canvas.style.display = "block";
         this._index = (reverse) ? total - 1 : 0;
-        this.startTimer(fps, total, columns, w, h, loop, reverse);
+        this.play();
     }
-    Image_play_sprite.prototype.startTimer = function (fps, total, columns, w, h, loop, reverse) {
+    Image_play_sprite.prototype.play = function () {
         var _this = this;
-        if (fps === void 0) { fps = 25; }
-        if (columns === void 0) { columns = 1; }
-        if (loop === void 0) { loop = false; }
-        if (reverse === void 0) { reverse = false; }
+        if (this._timer) {
+            this.pause();
+        }
+        this._canvas.style.display = "block";
         this._timer = setInterval(function () {
             var positionX, positionY = "0";
-            var step = (reverse) ? -1 : 1;
-            if (_this._index < total && _this._index >= 0) {
-                positionX = (_this._index % columns) * w * -1 + "px";
-                positionY = Math.floor(_this._index / columns) * h * -1 + "px";
+            var step = (_this._reverse) ? -1 : 1;
+            if (_this._index < _this._total && _this._index >= 0) {
+                positionX = (_this._index % _this._columns) * _this._w * -1 + "px";
+                positionY = Math.floor(_this._index / _this._columns) * _this._h * -1 + "px";
                 _this._canvas.style.backgroundPosition = positionX + " " + positionY;
                 // console.log(this._index,columns,w,step,positionX,positionY);
                 _this._index += step;
             }
             else {
-                if (loop) {
-                    _this._index = (reverse) ? total - 1 : 0;
+                if (_this._loop) {
+                    _this._index = (_this._reverse) ? _this._total - 1 : 0;
                 }
                 else {
                     clearInterval(_this._timer);
                 }
             }
-        }, Math.round(1000 / fps));
+        }, Math.round(1000 / this._fps));
     };
     Image_play_sprite.prototype.stop = function () {
         clearInterval(this._timer);
