@@ -5,6 +5,7 @@
 class Image_play_sprite{
 	private _canvas:any;
 	private _index:number;
+	private _timer:number;
 
 	/**
 	 * @param {string}			img 图片
@@ -44,7 +45,7 @@ class Image_play_sprite{
 		        loop: boolean = false, 
                 reverse: boolean = false
 		){
-		var timer=setInterval(()=>{
+		this._timer=setInterval(()=>{
 			var positionX,positionY="0";
 			var step=(reverse)?-1:1;
 			if(this._index<total && this._index>=0){
@@ -57,10 +58,19 @@ class Image_play_sprite{
 				if(loop){
 					this._index=(reverse)?total-1:0;
 				} else {
-					clearInterval(timer);
+					clearInterval(this._timer);
 				}
 			}
 		},Math.round(1000/fps));
+	}
+
+	stop(){
+		clearInterval(this._timer);
+		this._canvas.style.display="none";
+	}
+
+	pause(){
+		clearInterval(this._timer);
 	}
 
 }

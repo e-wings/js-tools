@@ -5,10 +5,11 @@
 <body>
     <h1>Sprite Animation</h1>
     <div id="case_canvas" style="width:410px;height:200px"></div>
+    <button onclick="ips.pause()">Pause</button><button onclick="ips.stop()">Stop</button>
     <script src="./js/Image_play_sprite.js"></script>
     <script type="text/javascript">
-      var ips=new Image_play_sprite('./img/x1.jpg', 'case_canvas',
-      20,36,5,410,200,true,false);
+      var ips=new Image_play_sprite('./img/sprite/x1.jpg', 'case_canvas',
+                                    20,36,5,410,200,true,false);
     </script>
 </body>
 

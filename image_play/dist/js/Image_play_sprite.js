@@ -32,7 +32,7 @@ var Image_play_sprite = (function () {
         if (columns === void 0) { columns = 1; }
         if (loop === void 0) { loop = false; }
         if (reverse === void 0) { reverse = false; }
-        var timer = setInterval(function () {
+        this._timer = setInterval(function () {
             var positionX, positionY = "0";
             var step = (reverse) ? -1 : 1;
             if (_this._index < total && _this._index >= 0) {
@@ -47,10 +47,17 @@ var Image_play_sprite = (function () {
                     _this._index = (reverse) ? total - 1 : 0;
                 }
                 else {
-                    clearInterval(timer);
+                    clearInterval(_this._timer);
                 }
             }
         }, Math.round(1000 / fps));
+    };
+    Image_play_sprite.prototype.stop = function () {
+        clearInterval(this._timer);
+        this._canvas.style.display = "none";
+    };
+    Image_play_sprite.prototype.pause = function () {
+        clearInterval(this._timer);
     };
     return Image_play_sprite;
 }());
